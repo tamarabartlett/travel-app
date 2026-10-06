@@ -41,6 +41,20 @@
       </section>
     }
 
+    @if (trip().lodging) {
+      <section class="trip-detail__section">
+        <h3>Lodging</h3>
+        <p class="trip-detail__text">{{ trip().lodging }}</p>
+      </section>
+    }
+
+    @if (trip().transport) {
+      <section class="trip-detail__section">
+        <h3>Transport</h3>
+        <p class="trip-detail__text">{{ trip().transport }}</p>
+      </section>
+    }
+
     @if (trip().sid) {
       <section class="trip-detail__section">
         <h3>Sid</h3>

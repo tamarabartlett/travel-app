@@ -58,6 +58,8 @@ export class TripFormComponent {
       validators: [Validators.required],
     }),
     notes: new FormControl('', { nonNullable: true }),
+    lodging: new FormControl('', { nonNullable: true }),
+    transport: new FormControl('', { nonNullable: true }),
     sid: new FormControl('', { nonNullable: true }),
     roverYesNo: new FormControl<boolean | null>(null),
   });
@@ -73,6 +75,8 @@ export class TripFormComponent {
           startDate: '',
           endDate: '',
           notes: '',
+          lodging: '',
+          transport: '',
           sid: '',
           roverYesNo: null,
         });
@@ -106,6 +110,8 @@ export class TripFormComponent {
       startDate: toDateInputValue(trip.startDate),
       endDate: toDateInputValue(trip.endDate),
       notes: trip.notes ?? '',
+      lodging: trip.lodging ?? '',
+      transport: trip.transport ?? '',
       sid: trip.sid ?? '',
       roverYesNo: trip.roverYesNo,
     });

@@ -5,6 +5,8 @@ export interface Trip {
   startDate: string;
   endDate: string;
   notes?: string;
+  lodging?: string;
+  transport?: string;
   /** Free-text “Sid” section (e.g. pet / Rover details). */
   sid?: string;
   /** Yes/No for Rover (or similar); null = unset. */
@@ -23,6 +25,8 @@ export interface TripFormValue {
   startDate: string;
   endDate: string;
   notes: string;
+  lodging: string;
+  transport: string;
   sid: string;
   roverYesNo: boolean | null;
 }

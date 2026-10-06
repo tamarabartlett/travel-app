@@ -190,6 +190,8 @@ export function tripFromFormValue(value: TripFormValue, existingId?: string): Tr
   }
 
   const notes = value.notes.trim();
+  const lodging = value.lodging.trim();
+  const transport = value.transport.trim();
   const sid = value.sid.trim();
   const trip: Trip = {
     id: existingId ?? newId(),
@@ -199,6 +201,8 @@ export function tripFromFormValue(value: TripFormValue, existingId?: string): Tr
     roverYesNo: value.roverYesNo,
   };
   if (notes) trip.notes = notes;
+  if (lodging) trip.lodging = lodging;
+  if (transport) trip.transport = transport;
   if (sid) trip.sid = sid;
   return trip;
 }
@@ -252,6 +256,8 @@ function normalizeTrip(raw: unknown, index: number): Trip {
   }
   const id = typeof raw['id'] === 'string' && raw['id'] ? raw['id'] : newId();
   const notesRaw = raw['notes'];
+  const lodgingRaw = raw['lodging'];
+  const transportRaw = raw['transport'];
   const sidRaw = raw['sid'];
   const roverRaw = raw['roverYesNo'];
 
@@ -265,6 +271,12 @@ function normalizeTrip(raw: unknown, index: number): Trip {
   };
   if (typeof notesRaw === 'string' && notesRaw.trim()) {
     trip.notes = notesRaw.trim();
+  }
+  if (typeof lodgingRaw === 'string' && lodgingRaw.trim()) {
+    trip.lodging = lodgingRaw.trim();
+  }
+  if (typeof transportRaw === 'string' && transportRaw.trim()) {
+    trip.transport = transportRaw.trim();
   }
   if (typeof sidRaw === 'string' && sidRaw.trim()) {
     trip.sid = sidRaw.trim();
