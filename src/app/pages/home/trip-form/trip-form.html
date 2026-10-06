@@ -1,0 +1,52 @@
+<section class="trip-form">
+  <h2 class="trip-form__title">{{ heading() }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Trip name</mat-label>
+      <input matInput formControlName="name" autocomplete="off" />
+      @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="date-row">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>Start date</mat-label>
+        <input matInput type="date" formControlName="startDate" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>End date</mat-label>
+        <input matInput type="date" formControlName="endDate" />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Notes</mat-label>
+      <textarea matInput formControlName="notes" rows="4"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Sid</mat-label>
+      <textarea matInput formControlName="sid" rows="3"></textarea>
+    </mat-form-field>
+
+    <fieldset class="rover-fieldset">
+      <legend>Rover (Yes / No)</legend>
+      <mat-radio-group formControlName="roverYesNo" class="rover-radios">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+        <mat-radio-button [value]="null">Not set</mat-radio-button>
+      </mat-radio-group>
+    </fieldset>
+
+    @if (formError(); as err) {
+      <p class="form-error" role="alert">{{ err }}</p>
+    }
+
+    <div class="actions">
+      <button matButton="filled" type="submit">Save</button>
+      <button matButton type="button" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</section>

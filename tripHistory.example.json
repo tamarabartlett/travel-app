@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "exportedAt": "2026-09-30T00:00:00.000Z",
+  "trips": [
+    {
+      "id": "example-trip-1",
+      "name": "Portland weekend",
+      "startDate": "2026-10-10T07:00:00.000Z",
+      "endDate": "2026-10-12T07:00:00.000Z",
+      "notes": "Hotel booked. Pack rain jacket.",
+      "sid": "Rover sitter TBD",
+      "roverYesNo": null
+    }
+  ]
+}

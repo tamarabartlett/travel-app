@@ -1,0 +1,53 @@
+@if (upcoming().length === 0 && past().length === 0) {
+  <p class="sidenav-empty">
+    No trips yet. Use <strong>Add Trip</strong> in the toolbar to plan one.
+  </p>
+} @else {
+  @if (upcoming().length > 0) {
+    <h2 class="section-heading">Current / Upcoming</h2>
+    <nav class="trip-nav" aria-label="Current and upcoming trips">
+      @for (t of upcoming(); track t.id) {
+        <button
+          type="button"
+          class="trip-card"
+          [class.trip-card--active]="isActive(t)"
+          (click)="selectTrip.emit(t.id)"
+        >
+          <mat-icon class="trip-card__icon" aria-hidden="true">directions_car</mat-icon>
+          <span class="trip-card__body">
+            <span class="trip-card__name">{{ t.name }}</span>
+            <span class="trip-card__dates">
+              {{ parseDate(t.startDate) | date: 'MMM d' }}
+              –
+              {{ parseDate(t.endDate) | date: 'MMM d, y' }}
+            </span>
+          </span>
+        </button>
+      }
+    </nav>
+  }
+
+  @if (past().length > 0) {
+    <h2 class="section-heading">Past</h2>
+    <nav class="trip-nav" aria-label="Past trips">
+      @for (t of past(); track t.id) {
+        <button
+          type="button"
+          class="trip-card"
+          [class.trip-card--active]="isActive(t)"
+          (click)="selectTrip.emit(t.id)"
+        >
+          <mat-icon class="trip-card__icon" aria-hidden="true">directions_car</mat-icon>
+          <span class="trip-card__body">
+            <span class="trip-card__name">{{ t.name }}</span>
+            <span class="trip-card__dates">
+              {{ parseDate(t.startDate) | date: 'MMM d' }}
+              –
+              {{ parseDate(t.endDate) | date: 'MMM d, y' }}
+            </span>
+          </span>
+        </button>
+      }
+    </nav>
+  }
+}

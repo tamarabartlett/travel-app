@@ -1,0 +1,54 @@
+.trip-form {
+  max-width: 32rem;
+  padding: 1.5rem;
+}
+
+.trip-form__title {
+  margin: 0 0 1.25rem;
+  font: var(--mat-sys-headline-small);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.date-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.date-field {
+  flex: 1 1 10rem;
+  min-width: 10rem;
+}
+
+.rover-fieldset {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+
+  legend {
+    padding: 0 0.25rem;
+    font: var(--mat-sys-label-medium);
+  }
+}
+
+.rover-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+
+.form-error {
+  margin: 0 0 1rem;
+  color: var(--mat-sys-error);
+  font: var(--mat-sys-body-medium);
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}

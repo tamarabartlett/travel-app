@@ -1,0 +1,51 @@
+@if (editing()) {
+  <app-trip-form
+    heading="Edit trip"
+    [initialTrip]="trip()"
+    (save)="save.emit($event)"
+    (cancel)="cancelEdit.emit()"
+  />
+} @else {
+  <article class="trip-detail">
+    <header class="trip-detail__header">
+      <h2 class="trip-detail__title">{{ trip().name }}</h2>
+      <button
+        matIconButton
+        type="button"
+        (click)="startEdit.emit()"
+        aria-label="Edit trip"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </header>
+
+    <dl class="trip-detail__meta">
+      <div class="meta-row">
+        <dt>Dates</dt>
+        <dd>
+          {{ parseDate(trip().startDate) | date: 'mediumDate' }}
+          –
+          {{ parseDate(trip().endDate) | date: 'mediumDate' }}
+        </dd>
+      </div>
+      <div class="meta-row">
+        <dt>Rover</dt>
+        <dd>{{ roverLabel(trip().roverYesNo) }}</dd>
+      </div>
+    </dl>
+
+    @if (trip().notes) {
+      <section class="trip-detail__section">
+        <h3>Notes</h3>
+        <p class="trip-detail__text">{{ trip().notes }}</p>
+      </section>
+    }
+
+    @if (trip().sid) {
+      <section class="trip-detail__section">
+        <h3>Sid</h3>
+        <p class="trip-detail__text">{{ trip().sid }}</p>
+      </section>
+    }
+  </article>
+}
