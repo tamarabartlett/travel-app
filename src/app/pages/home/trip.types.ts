@@ -1,3 +1,28 @@
+export interface TripFlight {
+  fromAirport: string;
+  toAirport: string;
+  flightNumber: string;
+  company: string;
+  departureTime: string;
+  arrivalTime: string;
+  confirmationNumber: string;
+}
+
+export interface TripTransport {
+  drive: boolean;
+  fly: boolean;
+  flights: TripFlight[];
+  /** Migrated from the legacy free-text transport field. */
+  legacyText?: string;
+}
+
+export interface TripScreenshot {
+  id: string;
+  name: string;
+  mimeType: string;
+  dataUrl: string;
+}
+
 export interface Trip {
   id: string;
   name: string;
@@ -6,7 +31,8 @@ export interface Trip {
   endDate: string;
   notes?: string;
   lodging?: string;
-  transport?: string;
+  transport?: TripTransport;
+  screenshots?: TripScreenshot[];
   /** Free-text “Sid” section (e.g. pet / Rover details). */
   sid?: string;
   /** Yes/No for Rover (or similar); null = unset. */
@@ -19,6 +45,22 @@ export interface TripHistoryFile {
   trips: Trip[];
 }
 
+export interface TripFlightFormValue {
+  fromAirport: string;
+  toAirport: string;
+  flightNumber: string;
+  company: string;
+  departureTime: string;
+  arrivalTime: string;
+  confirmationNumber: string;
+}
+
+export interface TripTransportFormValue {
+  drive: boolean;
+  fly: boolean;
+  flights: TripFlightFormValue[];
+}
+
 /** Form value shape (dates as yyyy-MM-dd from date inputs). */
 export interface TripFormValue {
   name: string;
@@ -26,7 +68,28 @@ export interface TripFormValue {
   endDate: string;
   notes: string;
   lodging: string;
-  transport: string;
+  transport: TripTransportFormValue;
   sid: string;
   roverYesNo: boolean | null;
+  screenshots: TripScreenshot[];
+}
+
+export function emptyFlightFormValue(): TripFlightFormValue {
+  return {
+    fromAirport: '',
+    toAirport: '',
+    flightNumber: '',
+    company: '',
+    departureTime: '',
+    arrivalTime: '',
+    confirmationNumber: '',
+  };
+}
+
+export function emptyTransportFormValue(): TripTransportFormValue {
+  return {
+    drive: false,
+    fly: false,
+    flights: [],
+  };
 }

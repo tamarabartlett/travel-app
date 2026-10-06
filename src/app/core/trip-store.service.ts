@@ -1,5 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
-import type { Trip, TripFormValue, TripHistoryFile } from '../pages/home/trip.types';
+import type {
+  Trip,
+  TripFlight,
+  TripFlightFormValue,
+  TripFormValue,
+  TripHistoryFile,
+  TripScreenshot,
+  TripTransport,
+} from '../pages/home/trip.types';
 import { TripApiService } from './trip-api.service';
 
 export const TRIP_HISTORY_VERSION = 1;
@@ -191,7 +199,6 @@ export function tripFromFormValue(value: TripFormValue, existingId?: string): Tr
 
   const notes = value.notes.trim();
   const lodging = value.lodging.trim();
-  const transport = value.transport.trim();
   const sid = value.sid.trim();
   const trip: Trip = {
     id: existingId ?? newId(),
@@ -202,7 +209,10 @@ export function tripFromFormValue(value: TripFormValue, existingId?: string): Tr
   };
   if (notes) trip.notes = notes;
   if (lodging) trip.lodging = lodging;
+  const transport = transportFromFormValue(value.transport);
   if (transport) trip.transport = transport;
+  const screenshots = normalizeScreenshots(value.screenshots);
+  if (screenshots.length) trip.screenshots = screenshots;
   if (sid) trip.sid = sid;
   return trip;
 }
@@ -219,6 +229,8 @@ function normalizeTripFromApi(t: Trip): Trip {
     startDate: new Date(t.startDate).toISOString(),
     endDate: new Date(t.endDate).toISOString(),
     roverYesNo: t.roverYesNo === true ? true : t.roverYesNo === false ? false : null,
+    transport: normalizeTransportRaw(t.transport),
+    screenshots: normalizeScreenshots(t.screenshots),
   };
 }
 
@@ -258,6 +270,7 @@ function normalizeTrip(raw: unknown, index: number): Trip {
   const notesRaw = raw['notes'];
   const lodgingRaw = raw['lodging'];
   const transportRaw = raw['transport'];
+  const screenshotsRaw = raw['screenshots'];
   const sidRaw = raw['sid'];
   const roverRaw = raw['roverYesNo'];
 
@@ -275,13 +288,152 @@ function normalizeTrip(raw: unknown, index: number): Trip {
   if (typeof lodgingRaw === 'string' && lodgingRaw.trim()) {
     trip.lodging = lodgingRaw.trim();
   }
-  if (typeof transportRaw === 'string' && transportRaw.trim()) {
-    trip.transport = transportRaw.trim();
-  }
+  const transport = normalizeTransportRaw(transportRaw);
+  if (transport) trip.transport = transport;
+  const screenshots = normalizeScreenshots(screenshotsRaw);
+  if (screenshots.length) trip.screenshots = screenshots;
   if (typeof sidRaw === 'string' && sidRaw.trim()) {
     trip.sid = sidRaw.trim();
   }
   return trip;
+}
+
+function transportFromFormValue(value: TripFormValue['transport']): TripTransport | undefined {
+  const drive = value.drive === true;
+  const fly = value.fly === true;
+  const flights = fly
+    ? value.flights
+        .map((f) => flightFromFormValue(f))
+        .filter((f): f is TripFlight => f !== null)
+    : [];
+
+  if (!drive && !fly && flights.length === 0) {
+    return undefined;
+  }
+
+  return { drive, fly, flights };
+}
+
+function flightFromFormValue(value: TripFlightFormValue): TripFlight | null {
+  const fromAirport = value.fromAirport.trim();
+  const toAirport = value.toAirport.trim();
+  const flightNumber = value.flightNumber.trim();
+  const company = value.company.trim();
+  const departureTime = value.departureTime.trim();
+  const arrivalTime = value.arrivalTime.trim();
+  const confirmationNumber = value.confirmationNumber.trim();
+
+  if (
+    !fromAirport &&
+    !toAirport &&
+    !flightNumber &&
+    !company &&
+    !departureTime &&
+    !arrivalTime &&
+    !confirmationNumber
+  ) {
+    return null;
+  }
+
+  return {
+    fromAirport,
+    toAirport,
+    flightNumber,
+    company,
+    departureTime,
+    arrivalTime,
+    confirmationNumber,
+  };
+}
+
+function normalizeTransportRaw(raw: unknown): TripTransport | undefined {
+  if (typeof raw === 'string') {
+    const text = raw.trim();
+    if (!text) return undefined;
+    return { drive: false, fly: false, flights: [], legacyText: text };
+  }
+  if (!isRecord(raw)) return undefined;
+
+  const drive = raw['drive'] === true;
+  const fly = raw['fly'] === true;
+  const legacyText =
+    typeof raw['legacyText'] === 'string' && raw['legacyText'].trim()
+      ? raw['legacyText'].trim()
+      : undefined;
+  const flightsRaw = raw['flights'];
+  const flights = Array.isArray(flightsRaw)
+    ? flightsRaw
+        .map((f) => normalizeFlightRaw(f))
+        .filter((f): f is TripFlight => f !== null)
+    : [];
+
+  if (!drive && !fly && flights.length === 0 && !legacyText) {
+    return undefined;
+  }
+
+  return { drive, fly, flights, legacyText };
+}
+
+function normalizeFlightRaw(raw: unknown): TripFlight | null {
+  if (!isRecord(raw)) return null;
+  const fromAirport =
+    typeof raw['fromAirport'] === 'string' ? raw['fromAirport'].trim() : '';
+  const toAirport =
+    typeof raw['toAirport'] === 'string' ? raw['toAirport'].trim() : '';
+  const flightNumber =
+    typeof raw['flightNumber'] === 'string' ? raw['flightNumber'].trim() : '';
+  const company = typeof raw['company'] === 'string' ? raw['company'].trim() : '';
+  const departureTime =
+    typeof raw['departureTime'] === 'string' ? raw['departureTime'].trim() : '';
+  const arrivalTime =
+    typeof raw['arrivalTime'] === 'string' ? raw['arrivalTime'].trim() : '';
+  const confirmationNumber =
+    typeof raw['confirmationNumber'] === 'string'
+      ? raw['confirmationNumber'].trim()
+      : '';
+
+  if (
+    !fromAirport &&
+    !toAirport &&
+    !flightNumber &&
+    !company &&
+    !departureTime &&
+    !arrivalTime &&
+    !confirmationNumber
+  ) {
+    return null;
+  }
+
+  return {
+    fromAirport,
+    toAirport,
+    flightNumber,
+    company,
+    departureTime,
+    arrivalTime,
+    confirmationNumber,
+  };
+}
+
+function normalizeScreenshots(raw: unknown): TripScreenshot[] {
+  if (!Array.isArray(raw)) return [];
+  const out: TripScreenshot[] = [];
+  for (const item of raw) {
+    if (!isRecord(item)) continue;
+    const dataUrl = item['dataUrl'];
+    const mimeType = item['mimeType'];
+    const name = item['name'];
+    const id = item['id'];
+    if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) continue;
+    if (typeof mimeType !== 'string' || !mimeType.startsWith('image/')) continue;
+    out.push({
+      id: typeof id === 'string' && id ? id : newId(),
+      name: typeof name === 'string' && name ? name : 'Screenshot',
+      mimeType,
+      dataUrl,
+    });
+  }
+  return out;
 }
 
 function isRecord(v: unknown): v is Record<string, unknown> {

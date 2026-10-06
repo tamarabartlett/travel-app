@@ -31,10 +31,123 @@
       <textarea matInput formControlName="lodging" rows="3"></textarea>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Transport</mat-label>
-      <textarea matInput formControlName="transport" rows="3"></textarea>
-    </mat-form-field>
+    <fieldset class="transport-fieldset" formGroupName="transport">
+      <legend>Transport</legend>
+      <div class="transport-checks">
+        <mat-checkbox formControlName="drive">Drive</mat-checkbox>
+        <mat-checkbox formControlName="fly" (change)="onFlyChange($event.checked)">
+          Fly
+        </mat-checkbox>
+      </div>
+
+      @if (form.controls.transport.controls.fly.value) {
+        <div class="flights-list" formArrayName="flights">
+          @for (flight of flightsArray.controls; track $index; let i = $index) {
+            <div class="flight-block" [formGroupName]="i">
+              <div class="flight-block__header">
+                <span class="flight-block__label">Flight {{ i + 1 }}</span>
+                @if (flightsArray.length > 1) {
+                  <button
+                    matIconButton
+                    type="button"
+                    (click)="removeFlight(i)"
+                    aria-label="Remove flight"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                }
+              </div>
+              <div class="flight-grid">
+                <mat-form-field appearance="outline">
+                  <mat-label>From airport</mat-label>
+                  <input matInput formControlName="fromAirport" autocomplete="off" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>To airport</mat-label>
+                  <input matInput formControlName="toAirport" autocomplete="off" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Flight #</mat-label>
+                  <input matInput formControlName="flightNumber" autocomplete="off" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Company</mat-label>
+                  <input matInput formControlName="company" autocomplete="off" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Departure time</mat-label>
+                  <input matInput type="datetime-local" formControlName="departureTime" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Arrival time</mat-label>
+                  <input matInput type="datetime-local" formControlName="arrivalTime" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="flight-grid__wide">
+                  <mat-label>Confirmation number</mat-label>
+                  <input matInput formControlName="confirmationNumber" autocomplete="off" />
+                </mat-form-field>
+              </div>
+            </div>
+          }
+          <div class="flight-add-row">
+            <button
+              matButton
+              type="button"
+              (click)="addFlight()"
+              aria-label="Add another flight"
+            >
+              <mat-icon>add</mat-icon>
+              Add flight
+            </button>
+          </div>
+        </div>
+      }
+    </fieldset>
+
+    <div class="screenshots-section">
+      <h3 class="screenshots-section__title">Screenshots</h3>
+      <input
+        #screenshotInput
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        (change)="onScreenshotInputChange($event)"
+      />
+      <button
+        matButton
+        type="button"
+        class="screenshot-drop"
+        [class.screenshot-drop--active]="screenshotDropActive()"
+        (click)="openScreenshotPicker()"
+        (dragover)="onScreenshotDragOver($event)"
+        (dragleave)="onScreenshotDragLeave($event)"
+        (drop)="onScreenshotDrop($event)"
+      >
+        <mat-icon>photo_library</mat-icon>
+        Add screenshots — drag and drop or click to choose
+      </button>
+      @if (screenshotError(); as shotErr) {
+        <p class="form-error" role="alert">{{ shotErr }}</p>
+      }
+      @if (screenshots().length) {
+        <ul class="screenshot-list">
+          @for (shot of screenshots(); track shot.id) {
+            <li class="screenshot-item">
+              <img [src]="shot.dataUrl" [alt]="shot.name" />
+              <button
+                matIconButton
+                type="button"
+                (click)="removeScreenshot(shot.id)"
+                aria-label="Remove screenshot"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Sid</mat-label>

@@ -48,10 +48,45 @@
       </section>
     }
 
-    @if (trip().transport) {
+    @if (hasTransport(trip().transport)) {
       <section class="trip-detail__section">
         <h3>Transport</h3>
-        <p class="trip-detail__text">{{ trip().transport }}</p>
+        <p class="trip-detail__text">{{ transportModes(trip().transport!) }}</p>
+        @if (trip().transport!.legacyText) {
+          <p class="trip-detail__text trip-detail__legacy">
+            {{ trip().transport!.legacyText }}
+          </p>
+        }
+        @if (trip().transport!.fly && trip().transport!.flights.length) {
+          @for (flight of trip().transport!.flights; track $index; let i = $index) {
+            <div class="flight-detail">
+              <h4>Flight {{ i + 1 }}</h4>
+              <dl class="flight-detail__meta">
+                @for (row of flightRows(flight); track row.label) {
+                  <div class="meta-row">
+                    <dt>{{ row.label }}</dt>
+                    <dd>{{ row.value }}</dd>
+                  </div>
+                }
+              </dl>
+            </div>
+          }
+        }
+      </section>
+    }
+
+    @if (trip().screenshots?.length) {
+      <section class="trip-detail__section">
+        <h3>Screenshots</h3>
+        <ul class="screenshot-gallery">
+          @for (shot of trip().screenshots!; track shot.id) {
+            <li>
+              <a [href]="shot.dataUrl" target="_blank" rel="noopener noreferrer">
+                <img [src]="shot.dataUrl" [alt]="shot.name" />
+              </a>
+            </li>
+          }
+        </ul>
       </section>
     }
 
