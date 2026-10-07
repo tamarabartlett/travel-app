@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Airplane">
+  <rect width="32" height="32" rx="7" fill="#1565c0" />
+  <path
+    fill="#fff"
+    d="M26.2 15.2 18.5 11V13l-5.8 3.2L9.8 15 6 16.8 9.8 18.6l2.9-1.2L18.5 21v2l7.7-4.2 1.5-.9-1.5-.9z"
+  />
+</svg>

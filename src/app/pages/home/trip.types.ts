@@ -12,6 +12,11 @@ export interface TripTransport {
   drive: boolean;
   fly: boolean;
   flights: TripFlight[];
+  rideToAirport?: boolean;
+  airportParking?: boolean;
+  toldRicho?: boolean;
+  flightInSharedCalendar?: boolean;
+  parkingReservationNumber?: string;
   /** Migrated from the legacy free-text transport field. */
   legacyText?: string;
 }
@@ -59,6 +64,11 @@ export interface TripTransportFormValue {
   drive: boolean;
   fly: boolean;
   flights: TripFlightFormValue[];
+  rideToAirport: boolean;
+  airportParking: boolean;
+  toldRicho: boolean;
+  flightInSharedCalendar: boolean;
+  parkingReservationNumber: string;
 }
 
 /** Form value shape (dates as yyyy-MM-dd from date inputs). */
@@ -91,5 +101,10 @@ export function emptyTransportFormValue(): TripTransportFormValue {
     drive: false,
     fly: false,
     flights: [],
+    rideToAirport: false,
+    airportParking: false,
+    toldRicho: false,
+    flightInSharedCalendar: false,
+    parkingReservationNumber: '',
   };
 }

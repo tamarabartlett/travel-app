@@ -311,7 +311,20 @@ function transportFromFormValue(value: TripFormValue['transport']): TripTranspor
     return undefined;
   }
 
-  return { drive, fly, flights };
+  const transport: TripTransport = { drive, fly, flights };
+
+  if (fly) {
+    if (value.rideToAirport === true) transport.rideToAirport = true;
+    if (value.airportParking === true) transport.airportParking = true;
+    if (value.toldRicho === true) transport.toldRicho = true;
+    if (value.flightInSharedCalendar === true) transport.flightInSharedCalendar = true;
+    const parkingReservationNumber = value.parkingReservationNumber.trim();
+    if (parkingReservationNumber) {
+      transport.parkingReservationNumber = parkingReservationNumber;
+    }
+  }
+
+  return transport;
 }
 
 function flightFromFormValue(value: TripFlightFormValue): TripFlight | null {
@@ -367,11 +380,39 @@ function normalizeTransportRaw(raw: unknown): TripTransport | undefined {
         .filter((f): f is TripFlight => f !== null)
     : [];
 
-  if (!drive && !fly && flights.length === 0 && !legacyText) {
+  const rideToAirport = raw['rideToAirport'] === true;
+  const airportParking = raw['airportParking'] === true;
+  const toldRicho = raw['toldRicho'] === true;
+  const flightInSharedCalendar = raw['flightInSharedCalendar'] === true;
+  const parkingReservationNumber =
+    typeof raw['parkingReservationNumber'] === 'string'
+      ? raw['parkingReservationNumber'].trim()
+      : '';
+
+  if (
+    !drive &&
+    !fly &&
+    flights.length === 0 &&
+    !legacyText &&
+    !rideToAirport &&
+    !airportParking &&
+    !toldRicho &&
+    !flightInSharedCalendar &&
+    !parkingReservationNumber
+  ) {
     return undefined;
   }
 
-  return { drive, fly, flights, legacyText };
+  const transport: TripTransport = { drive, fly, flights, legacyText };
+  if (rideToAirport) transport.rideToAirport = true;
+  if (airportParking) transport.airportParking = true;
+  if (toldRicho) transport.toldRicho = true;
+  if (flightInSharedCalendar) transport.flightInSharedCalendar = true;
+  if (parkingReservationNumber) {
+    transport.parkingReservationNumber = parkingReservationNumber;
+  }
+
+  return transport;
 }
 
 function normalizeFlightRaw(raw: unknown): TripFlight | null {

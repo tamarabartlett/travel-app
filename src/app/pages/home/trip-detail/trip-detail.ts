@@ -42,6 +42,8 @@ export class TripDetailComponent {
       transport.drive ||
       transport.fly ||
       (transport.flights?.length ?? 0) > 0 ||
+      transport.rideToAirport === true ||
+      transport.airportParking === true ||
       !!transport.legacyText
     );
   }

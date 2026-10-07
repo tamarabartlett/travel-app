@@ -41,6 +41,43 @@
       </div>
 
       @if (form.controls.transport.controls.fly.value) {
+        <div class="fly-airport-options">
+          <div class="transport-checks">
+            <mat-checkbox formControlName="rideToAirport">Ride to the Airport?</mat-checkbox>
+            <mat-checkbox formControlName="airportParking">Airport Parking?</mat-checkbox>
+          </div>
+
+          @if (form.controls.transport.controls.rideToAirport.value) {
+            <div class="transport-checks fly-sub-options">
+              <mat-checkbox formControlName="toldRicho">Told Richo?</mat-checkbox>
+              <mat-checkbox formControlName="flightInSharedCalendar">
+                Put flight in shared calendar?
+              </mat-checkbox>
+            </div>
+          }
+
+          @if (form.controls.transport.controls.airportParking.value) {
+            <div class="airport-parking-fields">
+              <mat-form-field appearance="outline" class="airport-parking-fields__number">
+                <mat-label>Reservation number</mat-label>
+                <input
+                  matInput
+                  formControlName="parkingReservationNumber"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+              <a
+                class="reservation-email-link"
+                [href]="parkingReservationEmailUrl()"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open reservation email in Gmail
+              </a>
+            </div>
+          }
+        </div>
+
         <div class="flights-list" formArrayName="flights">
           @for (flight of flightsArray.controls; track $index; let i = $index) {
             <div class="flight-block" [formGroupName]="i">

@@ -57,6 +57,34 @@
             {{ trip().transport!.legacyText }}
           </p>
         }
+        @if (trip().transport!.fly && trip().transport!.rideToAirport) {
+          <div class="flight-detail">
+            <h4>Ride to airport</h4>
+            <dl class="flight-detail__meta">
+              <div class="meta-row">
+                <dt>Told Richo</dt>
+                <dd>{{ trip().transport!.toldRicho ? 'Yes' : 'No' }}</dd>
+              </div>
+              <div class="meta-row">
+                <dt>Flight in shared calendar</dt>
+                <dd>{{ trip().transport!.flightInSharedCalendar ? 'Yes' : 'No' }}</dd>
+              </div>
+            </dl>
+          </div>
+        }
+        @if (trip().transport!.fly && trip().transport!.airportParking) {
+          <div class="flight-detail">
+            <h4>Airport parking</h4>
+            <dl class="flight-detail__meta">
+              @if (trip().transport!.parkingReservationNumber) {
+                <div class="meta-row">
+                  <dt>Reservation #</dt>
+                  <dd>{{ trip().transport!.parkingReservationNumber }}</dd>
+                </div>
+              }
+            </dl>
+          </div>
+        }
         @if (trip().transport!.fly && trip().transport!.flights.length) {
           @for (flight of trip().transport!.flights; track $index; let i = $index) {
             <div class="flight-detail">

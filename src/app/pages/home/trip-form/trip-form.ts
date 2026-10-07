@@ -88,6 +88,11 @@ export class TripFormComponent {
     transport: new FormGroup({
       drive: new FormControl(false, { nonNullable: true }),
       fly: new FormControl(false, { nonNullable: true }),
+      rideToAirport: new FormControl(false, { nonNullable: true }),
+      airportParking: new FormControl(false, { nonNullable: true }),
+      toldRicho: new FormControl(false, { nonNullable: true }),
+      flightInSharedCalendar: new FormControl(false, { nonNullable: true }),
+      parkingReservationNumber: new FormControl('', { nonNullable: true }),
       flights: new FormArray<FormGroup>([]),
     }),
     sid: new FormControl('', { nonNullable: true }),
@@ -112,7 +117,23 @@ export class TripFormComponent {
   protected onFlyChange(checked: boolean): void {
     if (checked && this.flightsArray.length === 0) {
       this.addFlight();
+      return;
     }
+    if (!checked) {
+      this.form.controls.transport.patchValue({
+        rideToAirport: false,
+        airportParking: false,
+        toldRicho: false,
+        flightInSharedCalendar: false,
+        parkingReservationNumber: '',
+      });
+    }
+  }
+
+  protected parkingReservationEmailUrl(): string {
+    const num = this.form.controls.transport.controls.parkingReservationNumber.value.trim();
+    const query = num || 'airport parking reservation';
+    return `https://mail.google.com/mail/u/0/#search/${encodeURIComponent(query)}`;
   }
 
   protected addFlight(flight?: TripFlight): void {
@@ -216,6 +237,11 @@ export class TripFormComponent {
       transport: {
         drive: transport?.drive ?? false,
         fly: transport?.fly ?? false,
+        rideToAirport: transport?.rideToAirport ?? false,
+        airportParking: transport?.airportParking ?? false,
+        toldRicho: transport?.toldRicho ?? false,
+        flightInSharedCalendar: transport?.flightInSharedCalendar ?? false,
+        parkingReservationNumber: transport?.parkingReservationNumber ?? '',
         flights: [],
       },
       sid: trip.sid ?? '',
