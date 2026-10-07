@@ -30,7 +30,7 @@ export class TripDetailComponent {
     return parseDateOnly(iso);
   }
 
-  protected roverLabel(value: boolean | null): string {
+  protected yesNoLabel(value: boolean | null): string {
     if (value === true) return 'Yes';
     if (value === false) return 'No';
     return 'Not set';

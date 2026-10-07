@@ -96,6 +96,7 @@ export class TripFormComponent {
       flights: new FormArray<FormGroup>([]),
     }),
     sid: new FormControl('', { nonNullable: true }),
+    richoYesNo: new FormControl<boolean | null>(null),
     roverYesNo: new FormControl<boolean | null>(null),
   });
 
@@ -218,6 +219,7 @@ export class TripFormComponent {
       lodging: '',
       transport: emptyTransportFormValue(),
       sid: '',
+      richoYesNo: null,
       roverYesNo: null,
     });
     this.clearFlights();
@@ -245,6 +247,7 @@ export class TripFormComponent {
         flights: [],
       },
       sid: trip.sid ?? '',
+      richoYesNo: trip.richoYesNo,
       roverYesNo: trip.roverYesNo,
     });
     const flights = transport?.flights ?? [];

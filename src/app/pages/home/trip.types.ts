@@ -42,6 +42,8 @@ export interface Trip {
   sid?: string;
   /** Yes/No for Rover (or similar); null = unset. */
   roverYesNo: boolean | null;
+  /** Yes/No for Richo; null = unset. */
+  richoYesNo: boolean | null;
 }
 
 export interface TripHistoryFile {
@@ -81,6 +83,7 @@ export interface TripFormValue {
   transport: TripTransportFormValue;
   sid: string;
   roverYesNo: boolean | null;
+  richoYesNo: boolean | null;
   screenshots: TripScreenshot[];
 }
 

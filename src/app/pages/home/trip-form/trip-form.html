@@ -191,6 +191,14 @@
       <textarea matInput formControlName="sid" rows="3"></textarea>
     </mat-form-field>
 
+    <fieldset class="richo-fieldset">
+      <legend>Richo (Yes / No)</legend>
+      <mat-radio-group formControlName="richoYesNo" class="richo-radios">
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+    </fieldset>
+
     <fieldset class="rover-fieldset">
       <legend>Rover (Yes / No)</legend>
       <mat-radio-group formControlName="roverYesNo" class="rover-radios">

@@ -206,6 +206,7 @@ export function tripFromFormValue(value: TripFormValue, existingId?: string): Tr
     startDate: dateInputToIso(value.startDate),
     endDate: dateInputToIso(value.endDate),
     roverYesNo: value.roverYesNo,
+    richoYesNo: value.richoYesNo,
   };
   if (notes) trip.notes = notes;
   if (lodging) trip.lodging = lodging;
@@ -229,6 +230,7 @@ function normalizeTripFromApi(t: Trip): Trip {
     startDate: new Date(t.startDate).toISOString(),
     endDate: new Date(t.endDate).toISOString(),
     roverYesNo: t.roverYesNo === true ? true : t.roverYesNo === false ? false : null,
+    richoYesNo: t.richoYesNo === true ? true : t.richoYesNo === false ? false : null,
     transport: normalizeTransportRaw(t.transport),
     screenshots: normalizeScreenshots(t.screenshots),
   };
@@ -273,6 +275,7 @@ function normalizeTrip(raw: unknown, index: number): Trip {
   const screenshotsRaw = raw['screenshots'];
   const sidRaw = raw['sid'];
   const roverRaw = raw['roverYesNo'];
+  const richoRaw = raw['richoYesNo'];
 
   const trip: Trip = {
     id,
@@ -281,6 +284,8 @@ function normalizeTrip(raw: unknown, index: number): Trip {
     endDate: new Date(endDate).toISOString(),
     roverYesNo:
       roverRaw === true ? true : roverRaw === false ? false : null,
+    richoYesNo:
+      richoRaw === true ? true : richoRaw === false ? false : null,
   };
   if (typeof notesRaw === 'string' && notesRaw.trim()) {
     trip.notes = notesRaw.trim();
